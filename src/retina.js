@@ -10,7 +10,10 @@
 
         // Resize high-resolution images to original image's pixel dimensions
         // https://github.com/imulus/retinajs/issues/8
-        force_original_dimensions: true
+        force_original_dimensions: true,
+
+        // Allow loading @2x images from external domain
+        allow_external: true
     };
 
     function Retina() {}
@@ -101,7 +104,7 @@
             return callback(true);
         } else if (this.at_2x_path in RetinaImagePath.confirmed_paths) {
             return callback(true);
-        } else if (this.is_external()) {
+        } else if (this.is_external() && !config.allow_external) {
             return callback(false);
         } else {
             http = new XMLHttpRequest();
@@ -153,7 +156,7 @@
                 setTimeout(load, 5);
             } else {
                 if (config.force_original_dimensions) {
-                    if (that.el.offsetWidth == 0 && that.el.offsetHeight == 0) {
+                    if (that.el.offsetWidth === 0 && that.el.offsetHeight === 0) {
                         that.el.setAttribute('width', that.el.naturalWidth);
                         that.el.setAttribute('height', that.el.naturalHeight);
                     } else {
